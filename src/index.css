@@ -10,4 +10,41 @@ header > h1 {
 }
 main {
     background-color: violet;
+    display: flex;
+}
+.Menu_rej {
+    text-align: center;
+    background-color:sienna;
+    width: 20%;
+    padding-bottom: 60px;
+}
+.Menu_rej > h1 {
+    padding-top: 20px;
+}
+.Menu_log {
+    text-align: center;
+    background-color: aqua;
+    width: 20%;
+    padding-bottom: 60px;
+}
+.Menu_log > h1 {
+    padding-top: 20px;
+}
+.Reklama_1 {
+    text-align: right;
+    background-color: chartreuse;
+    width: 20%;
+    margin-left: auto;
+}
+.Reklama_2 {
+    text-align: left;
+    background-color: chartreuse;
+    width: 20%;
+    margin-right: auto;
+}
+.guzik_log {
+    margin-top: 30px;
+}
+input {
+    text-align: center;
 }

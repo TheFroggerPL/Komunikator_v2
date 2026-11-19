@@ -11,40 +11,74 @@ header > h1 {
 main {
     background-color: violet;
     display: flex;
+    height: 60rem;
 }
 .Menu_rej {
     text-align: center;
     background-color:sienna;
     width: 20%;
-    padding-bottom: 60px;
+    padding-bottom: 4rem;
 }
 .Menu_rej > h1 {
-    padding-top: 20px;
+    padding-top: 1.5rem;
 }
+
 .Menu_log {
     text-align: center;
     background-color: aqua;
     width: 20%;
-    padding-bottom: 60px;
+    height: 27rem;
+    padding-bottom: 4rem;
 }
 .Menu_log > h1 {
-    padding-top: 20px;
+    padding-top: 1.5rem;
 }
+
 .Reklama_1 {
     text-align: right;
     background-color: chartreuse;
     width: 20%;
     margin-left: auto;
 }
+
 .Reklama_2 {
     text-align: left;
     background-color: chartreuse;
     width: 20%;
     margin-right: auto;
 }
+
+.Menu_kom {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: blue;
+    width: 90rem;
+    align-items: center;
+  
+}
+.czat {
+    background-color: yellow;
+    width: 75%;
+    margin-right: auto;
+    margin-left: auto;
+    height: 56rem;
+}
+.kontakty {
+    background-color: chocolate;
+    width: 20%;
+    margin-left: auto;
+    height: 56rem;    
+}
+
 .guzik_log {
-    margin-top: 30px;
+    margin-top: 2.3rem;
 }
 input {
     text-align: center;
+}
+.rej-log {
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
 }

@@ -63,7 +63,12 @@ export default function MyApp() {
         <main>
           <section className='Menu_kom'>
             <section className='kontakty'>
-              s
+              <section className='znajomi_1'>
+                <h2>ZNAJOMI</h2>
+              </section>
+              <section className='znajomi_2'>
+                <section className='znajomi_2-5' id='kontakty'>lalala</section>
+              </section>
             </section>
             <section className='czat'>
               s
@@ -76,7 +81,7 @@ export default function MyApp() {
     )
   }
 
-  const [zakladka , zmiania_zakladki] = useState("loguj");
+  const [zakladka , zmiania_zakladki] = useState("gl_str");
   const zakladki = {
     loguj: Logowanie,
     rejestruj: Rejestracja,

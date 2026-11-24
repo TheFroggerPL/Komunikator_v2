@@ -1,38 +1,46 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './index.css'
-
+import { supabase } from './lib/supabaseClient'
 
 export default function MyApp() {
 
   function Logowanie() {
     return (
     <>
-        <header>
-          <h1>KOMUNIKATOR</h1>
-        </header>
-        <main>
-          <section className='Reklama_1'>
-            Reklama
-          </section>
-          <section className='Menu_log'>
-            <h1>LOGOWANIE</h1><br/>
-            <p>NAZWA UŻYTKOWNIKA</p><input type='text'></input>
-            <p>NAZWA HASŁA</p><input type='password'></input><br/>
-            <button className='guzik_log'>ZALOGUJ</button><br/>
-            <p>Jeżeli <b>NIE</b> posiadasz konta to możesz <p onClick={() => zmiania_zakladki("rejestruj")} className='rej-log'>Zarejestrować się~!</p></p>
-          </section>
-          <section className='Reklama_2'>
-            Reklama
-          </section>
-        </main>
-        <button onClick={() => zmiania_zakladki("gl_str")}>Temp button</button>
+      {!user?(
+        <div>
+          <header>
+            <h1>KOMUNIKATOR</h1>
+          </header>
+          <main>
+            <section className='Reklama_1'>
+              Reklama
+            </section>
+            <section className='Menu_log'>
+              <h1>LOGOWANIE</h1><br/>
+              <p>EMAIL</p><input type='email' value={email} onChange={(e) => setEmail(e.target.value)}></input>
+              <p>NAZWA HASŁA</p><input type='password' value={password} onChange={(e) => setPassword(e.target.value)}></input><br/>
+              <button className='guzik_log' onClick={logIn} disabled={loading || !email || !password}>ZALOGUJ</button><br/>
+              <p>Jeżeli <b>NIE</b> posiadasz konta to możesz <p onClick={() => zmiania_zakladki("rejestruj")} className='rej-log'>Zarejestrować się~!</p></p>
+              {error && <p style={{ color:"red"}}>{error}</p>}
+              {loading?"Chwileczkę . . . ": ""}
+            </section>
+            <section className='Reklama_2'>
+              Reklama
+            </section>
+          </main>
+        </div>
+      ):(Glowna_strona())}
+        
     </>
     )
   }
   function Rejestracja() {
     return (
     <>
-        <header>
+      {!user?(
+        <div>
+          <header>
           <h1>KOMUNIKATOR</h1>
         </header>
         <main>
@@ -41,16 +49,21 @@ export default function MyApp() {
           </section>
           <section className='Menu_rej'>
             <h1>REJESTRACJA</h1><br/>
-            <p>NAZWA UŻYTKOWNIKA</p><input type='text'></input>
-            <p>NAZWA HASŁA</p><input type='password'></input><br/>
-            <button className='guzik_log'>ZAREJESTRUJ</button><br/>
+            <p>NAZWA UŻYTKOWNIKA</p><input type='text' value={username} onChange={e => setUsername(e.target.value)}></input>
+            <p>EMAIL</p><input type='text' value={email} onChange={(e) => setEmail(e.target.value)}></input>
+            <p>NAZWA HASŁA</p><input type='password' value={password} onChange={e => setPassword(e.target.value)}></input><br/>
+            <button className='guzik_log' onClick={signUp} disabled={loading || !email || !password}>ZAREJESTRUJ </button><br/>
             <p>Jeżeli <b>JUŻ</b> posiadasz konto to możesz <p onClick={() => zmiania_zakladki("loguj")} className='rej-log'>Zalogować się~!</p></p>
+            {error && <p style={{ color:"red"}}>{error}</p>}
+            {loading?"Chwileczkę . . . ": ""}
           </section>
           <section className='Reklama_2'>
             Reklama
           </section>
         </main>
-        <button onClick={() => zmiania_zakladki("gl_str")}>Temp button</button>
+        </div>
+      ):(Glowna_strona())}
+    
     </>
     )
   }
@@ -76,25 +89,78 @@ export default function MyApp() {
           </section>
           
         </main>
-        <button onClick={() => zmiania_zakladki("loguj")}>Temp button</button>
+        <button onClick={logout} disabled={loading }>{loading?"Chwileczkę . . . ": "WYLOGUJ"}</button>
       </>
     )
   }
 
-  const [zakladka , zmiania_zakladki] = useState("loguj");
+  const [zakladka , zmiania_zakladki] = useState("rejestruj");
   const zakladki = {
     loguj: Logowanie,
-    rejestruj: Rejestracja,
-    gl_str: Glowna_strona
+    rejestruj: Rejestracja
   }
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const signUp = async()=> {
+    setError("");
+    setLoading(true);
+    const {data, error} = await supabase.auth.signUp({email, password});
+    setLoading(false);
+
+    if (error) return setError(error.message);
+
+    setUser(data.user ?? null);
+  }
+
+  const logIn = async()=> {
+    setError("");
+    setLoading(true);
+    const {data, error} = await supabase.auth.signInWithPassword({email, password});
+    setLoading(false);
+
+    if (error) return setError(error.message);
+
+    setUser(data.user ?? null);
+  }
+
+  const logout = async()=> {
+    setError("");
+    setLoading(true);
+    const {data, error} = await supabase.auth.signOut({email, password});
+    setLoading(false);
+
+    if (error) return setError(error.message);
+
+    setUser(data.user ?? null);
+  }
+
+  useEffect(()=> {
+    const init = async ()=> {
+      const {data: {session}} = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+    init();
+
+    const {data: {subscription}} =
+      supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user ?? null);
+      });
+      return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <>
-      {/*  {zakladki[zakladka]({zmiania_zakladki})} */}
+      {zakladki[zakladka]({zmiania_zakladki})}
 
-      {!user?({zakladki[zakladka]({zmiania_zakladki})}):(Glowna_strona())}
+     {/*  {!user?(Rejestracja()):(Glowna_strona())} */}
     </>
-  )
+  );
 
 
 }

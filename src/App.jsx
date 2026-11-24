@@ -90,7 +90,9 @@ export default function MyApp() {
 
   return (
     <>
-      {zakladki[zakladka]({zmiania_zakladki})}
+      {/*  {zakladki[zakladka]({zmiania_zakladki})} */}
+
+      {!user?({zakladki[zakladka]({zmiania_zakladki})}):(Glowna_strona())}
     </>
   )
 

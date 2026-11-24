@@ -81,7 +81,7 @@ export default function MyApp() {
     )
   }
 
-  const [zakladka , zmiania_zakladki] = useState("gl_str");
+  const [zakladka , zmiania_zakladki] = useState("loguj");
   const zakladki = {
     loguj: Logowanie,
     rejestruj: Rejestracja,

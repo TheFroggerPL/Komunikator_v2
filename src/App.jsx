@@ -153,18 +153,7 @@ export default function MyApp() {
   }
 
   useEffect(()=> {
-      const TEST = async () => {
-      let {data, error} = await supabase
-      .from('Users')
-      .select('Username')
-
-      if (error) {
-        console.log('Error fetching notes:', error)
-      } else {
-        setUsers(data)
-      }
-    }
-    TEST()
+      
 
     const init = async ()=> {
       const {data: {session}} = await supabase.auth.getSession();
@@ -181,7 +170,20 @@ export default function MyApp() {
     
   }, []);
 
+  useEffect(()=> {
+const TEST = async () => {
+      let {data, error} = await supabase
+      .from('Users')
+      .select('Username')
 
+      if (error) {
+        console.log('Error fetching notes:', error)
+      } else {
+        setUsers(data)
+      }
+    }
+    TEST()
+  }, []);
 
   return (
     <>

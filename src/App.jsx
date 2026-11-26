@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import {createClient} from '@supabase/supabase-js'
 import './index.css'
 import { supabase } from './lib/supabaseClient'
 
@@ -82,6 +83,11 @@ export default function MyApp() {
               <section className='znajomi_2'>
                 <section className='znajomi_2-5' id='kontakty'>lalala</section>
               </section>
+              <section className='znajomi_3'>
+                <p style={{ fontWeight: 'bold' , fontSize: '25px'}}>DODAJ ZNAJOMEGO</p>
+                <p>Nazwa użytkownika</p><input type='text'></input><br/>
+                <button>DODAJ</button>
+              </section>
             </section>
             <section className='czat'>
               s
@@ -113,10 +119,16 @@ export default function MyApp() {
     const {data, error} = await supabase.auth.signUp({email, password});
     setLoading(false);
 
+    const {username, email} = await supabase
+      .from('Users')
+      .insert({ id: 1, Username: username, Email: email })
+
     if (error) return setError(error.message);
 
     setUser(data.user ?? null);
   }
+
+    
 
   const logIn = async()=> {
     setError("");
@@ -157,10 +169,8 @@ export default function MyApp() {
   return (
     <>
       {zakladki[zakladka]({zmiania_zakladki})}
-
-     {/*  {!user?(Rejestracja()):(Glowna_strona())} */}
     </>
   );
 
-
+{/*Brochacho można typ array do tabelki w bazie danych O_O*/}
 }

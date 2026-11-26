@@ -86,7 +86,7 @@ main {
     margin-top: 2rem;
     margin-left: 1rem;
     margin-right: 1rem;
-    height: 44rem;
+    height: 33rem;
     overflow-y: auto;
 }
 .znajomi_2-5 {
@@ -97,6 +97,18 @@ main {
     margin-top: 1.1rem;
     padding-top: 5px;
     padding-bottom: 5px;
+}
+.znajomi_3 {
+    background-color:cyan ;
+    margin-top: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    height: 9rem;
+    text-align: center;
+}
+.znajomi_3 > p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 

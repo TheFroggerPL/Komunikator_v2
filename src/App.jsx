@@ -176,21 +176,6 @@ export default function MyApp() {
     
   }, []);
 
-  useEffect(()=> {
-const TEST = async () => {
-      let {data, error} = await supabase
-      .from('Users')
-      .select('Username')
-
-      if (error) {
-        console.log('Error fetching notes:', error)
-      } else {
-        setUsers(data)
-      }
-    }
-    TEST()
-  }, []);
-
   return (
     <>
       {zakladki[zakladka]({zmiania_zakladki})}

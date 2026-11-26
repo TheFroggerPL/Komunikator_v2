@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './index.css'
 import { supabase } from './lib/supabaseClient'
 
+
 export default function MyApp() {
 
   function Logowanie() {
@@ -95,13 +96,6 @@ export default function MyApp() {
           
         </main>
         <button onClick={logout} disabled={loading }>{loading?"Chwileczkę . . . ": "WYLOGUJ"}</button>
-
-        <div><h1>da</h1>
-        {users.map(user => (
-          <div key={user.id}>
-            <h2>{user.Username}</h2>
-          </div>
-        ))}</div>
       </>
     )
   }
@@ -119,6 +113,8 @@ export default function MyApp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
+
+  const [notes, setNotes] = useState([])
 
   const signUp = async()=> {
     setError("");
@@ -153,7 +149,17 @@ export default function MyApp() {
   }
 
   useEffect(()=> {
-      
+    const fetchNotes = async () => {
+      let {data, error} = await supabase
+      .from('notes')
+      .select('*')
+      if (error) {
+        console.log('Error fetching notes:', error)
+      } else {
+        setNotes(data)
+      }
+    }
+    fetchNotes()
 
     const init = async ()=> {
       const {data: {session}} = await supabase.auth.getSession();
@@ -188,6 +194,15 @@ const TEST = async () => {
   return (
     <>
       {zakladki[zakladka]({zmiania_zakladki})}
+      <div>
+        <h1>notes</h1>
+        {notes.map(note => (
+          <div key={note.id}>
+            <h2>{note.title}</h2>
+            <p>{note.description}</p>
+          </div>
+        ))}
+      </div>
     </>
   );
 

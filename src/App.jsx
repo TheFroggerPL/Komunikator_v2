@@ -181,8 +181,8 @@ export default function MyApp() {
       {zakladki[zakladka]({zmiania_zakladki})}
       <div>
         <h1>notes</h1>
-        {notes.map(note => (
-          <div key={note.id}>
+        {notes.map((note) => (
+          <div key={note.id} style={{border: '1px solid black', margin: '10px', padding: '10px'}}>
             <h2>{note.title}</h2>
             <p>{note.description}</p>
           </div>

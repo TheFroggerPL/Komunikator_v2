@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import {createClient} from '@supabase/supabase-js'
 import './index.css'
 import { supabase } from './lib/supabaseClient'
 
@@ -96,6 +95,13 @@ export default function MyApp() {
           
         </main>
         <button onClick={logout} disabled={loading }>{loading?"Chwileczkę . . . ": "WYLOGUJ"}</button>
+
+        <div><h1>da</h1>
+        {users.map(user => (
+          <div key={user.id}>
+            <h2>{user.Username}</h2>
+          </div>
+        ))}</div>
       </>
     )
   }
@@ -112,6 +118,7 @@ export default function MyApp() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
 
   const signUp = async()=> {
     setError("");
@@ -119,16 +126,9 @@ export default function MyApp() {
     const {data, error} = await supabase.auth.signUp({email, password});
     setLoading(false);
 
-    const {username, email} = await supabase
-      .from('Users')
-      .insert({ id: 1, Username: username, Email: email })
-
     if (error) return setError(error.message);
-
     setUser(data.user ?? null);
   }
-
-    
 
   const logIn = async()=> {
     setError("");
@@ -153,6 +153,19 @@ export default function MyApp() {
   }
 
   useEffect(()=> {
+      const TEST = async () => {
+      let {data, error} = await supabase
+      .from('Users')
+      .select('Username')
+
+      if (error) {
+        console.log('Error fetching notes:', error)
+      } else {
+        setUsers(data)
+      }
+    }
+    TEST()
+
     const init = async ()=> {
       const {data: {session}} = await supabase.auth.getSession();
       setUser(session?.user ?? null);
@@ -164,7 +177,11 @@ export default function MyApp() {
         setUser(session?.user ?? null);
       });
       return () => subscription.unsubscribe();
+
+    
   }, []);
+
+
 
   return (
     <>

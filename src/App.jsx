@@ -157,10 +157,10 @@ export default function MyApp() {
           console.log("No user signed in")
           return
       }
-      let {data, error} = await supabase
+      const {data, error} = await supabase
       .from('Users')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('id_user_checker', user.id)
        {/*.eq To identyfikuje obecnego usera i pokazuje tylko jego rzeczy*/}
       if (error) {
         console.log('Error fetching notes:', error)
@@ -170,8 +170,6 @@ export default function MyApp() {
       
     }
     fetchUsers();
-    
-    
 
     const init = async ()=> {
       const {data: {session}} = await supabase.auth.getSession();
@@ -197,7 +195,10 @@ export default function MyApp() {
           <div key={user.id}>
             <h2>{user.id_users}</h2>
             <p>{user.Username}</p>
-            <p>{user.Email}</p>
+            <p>{user.Email}</p><br/>
+            <p>{Friend_requests.id_friend_requests}</p>
+            <p>{Friend_requests.To}</p>
+            <p>{Friend_requests.Status}</p>
           </div>
         ))}
       </div>

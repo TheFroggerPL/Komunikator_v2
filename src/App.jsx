@@ -113,8 +113,7 @@ export default function MyApp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
-
-  const [notes, setNotes] = useState([])
+  const [friend_request, setFriend_request] = useState([]);
 
   const signUp = async()=> {
     setError("");
@@ -148,7 +147,36 @@ export default function MyApp() {
     setUser(data.user ?? null);
   }
 
-  
+  const insertData = async () => {
+      const {data: {user}} = await supabase.auth.getUser()
+      if(!user) {
+        console.log("No user signed in")
+        return
+    }
+    const {data, error} = await supabase
+      .from('Users')
+      .insert({Username: username, Email: email, id_user_checker: user.id})
+      .eq('id_user_checker', user.id)
+      
+      if (error) {
+        console.log('Error inserting user:', error)
+      } else {
+        console.log('User inserted successfully:', data)
+}
+  }
+
+  const addfriend = async()=> {
+    setError("");
+    setLoading(true);
+    const {data, error} = await supabase
+    .from('Friend_requests')
+    .insert({Username: username,To: friend_request ,Status: "pending", id_user_checker: user.id})
+    .select('*');
+    setLoading(false);
+    if (error) return setError(error.message);
+    if (data) {console.log('Friend request sent successfully:', data);}
+
+  }
 
   useEffect(()=> {
     const fetchUsers = async () => {

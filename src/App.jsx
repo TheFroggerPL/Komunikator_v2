@@ -148,18 +148,30 @@ export default function MyApp() {
     setUser(data.user ?? null);
   }
 
+  
+
   useEffect(()=> {
-    const fetchNotes = async () => {
+    const fetchUsers = async () => {
+      const {data: {user}} = await supabase.auth.getUser()
+        if(!user) {
+          console.log("No user signed in")
+          return
+      }
       let {data, error} = await supabase
-      .from('notes')
+      .from('Users')
       .select('*')
+      .eq('user_id', user.id)
+       {/*.eq To identyfikuje obecnego usera i pokazuje tylko jego rzeczy*/}
       if (error) {
         console.log('Error fetching notes:', error)
       } else {
-        setNotes(data)
+        setUsers(data)
       }
+      
     }
-    fetchNotes()
+    fetchUsers();
+    
+    
 
     const init = async ()=> {
       const {data: {session}} = await supabase.auth.getSession();
@@ -180,11 +192,12 @@ export default function MyApp() {
     <>
       {zakladki[zakladka]({zmiania_zakladki})}
       <div>
-        <h1>notes</h1>
-        {notes.map((note) => (
-          <div key={note.id} style={{border: '1px solid black', margin: '10px', padding: '10px'}}>
-            <h2>{note.title}</h2>
-            <p>{note.description}</p>
+        <h1>lalala</h1>
+        {users.map((user) => (
+          <div key={user.id}>
+            <h2>{user.id_users}</h2>
+            <p>{user.Username}</p>
+            <p>{user.Email}</p>
           </div>
         ))}
       </div>

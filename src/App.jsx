@@ -81,16 +81,22 @@ export default function MyApp() {
                 <h2>ZNAJOMI</h2>
               </section>
               <section className='znajomi_2'>
-                <section className='znajomi_2-5' id='kontakty'>lalala</section>
+                {friend_request.map((requestt) => (
+                  <section className='znajomi_2-5' id='kontakty' key={requestt.id}>
+                    <h3>{requestt.To}</h3>
+                  </section>
+                ))}
               </section>
               <section className='znajomi_3'>
                 <p style={{ fontWeight: 'bold' , fontSize: '25px'}}>DODAJ ZNAJOMEGO</p>
-                <p>Nazwa użytkownika</p><input type='text'></input><br/>
-                <button>DODAJ</button>
+                <p>Nazwa użytkownika</p><input type='text' value={sent_friend_request} onChange={e => setSent_friend_request(e.target.value)}></input><br/>
+                <button onClick={addfriend} disabled={!sent_friend_request}>DODAJ</button>
               </section>
             </section>
             <section className='czat'>
-              s
+              <section className='Glowne_okno'>
+                s
+              </section>
             </section>
           </section>
           
@@ -107,6 +113,7 @@ export default function MyApp() {
   }
 
   const [username, setUsername] = useState("");
+  const [username2, setUsername2] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [user, setUser] = useState(null);
@@ -114,6 +121,7 @@ export default function MyApp() {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [friend_request, setFriend_request] = useState([]);
+  const [sent_friend_request, setSent_friend_request] = useState("");
 
   const signUp = async()=> {
     setError("");
@@ -146,32 +154,14 @@ export default function MyApp() {
 
     setUser(data.user ?? null);
   }
-
-  const insertData = async () => {
-      const {data: {user}} = await supabase.auth.getUser()
-      if(!user) {
-        console.log("No user signed in")
-        return
-    }
-    const {data, error} = await supabase
-      .from('Users')
-      .insert({Username: username, Email: email, id_user_checker: user.id})
-      .eq('id_user_checker', user.id)
-      
-      if (error) {
-        console.log('Error inserting user:', error)
-      } else {
-        console.log('User inserted successfully:', data)
-}
-  }
-
   const addfriend = async()=> {
     setError("");
     setLoading(true);
     const {data, error} = await supabase
     .from('Friend_requests')
-    .insert({Username: username,To: friend_request ,Status: "pending", id_user_checker: user.id})
-    .select('*');
+    .insert({Username: username2,To: sent_friend_request ,Status: "pending", id_user_checker: user.id})
+    .select('*')
+    .eq('id_user_checker', user.id)
     setLoading(false);
     if (error) return setError(error.message);
     if (data) {console.log('Friend request sent successfully:', data);}
@@ -189,15 +179,59 @@ export default function MyApp() {
       .from('Users')
       .select('*')
       .eq('id_user_checker', user.id)
+      
        {/*.eq To identyfikuje obecnego usera i pokazuje tylko jego rzeczy*/}
       if (error) {
-        console.log('Error fetching notes:', error)
+        console.log('Error fetching users:', error)
       } else {
+        setUsername2(data[0].Username)
         setUsers(data)
       }
-      
     }
     fetchUsers();
+
+   const insertData = async () => {
+      const {data: {user}} = await supabase.auth.getUser()
+      if(!user) {
+        console.log("No user signed in")
+        return
+    }
+    const {data, error} = await supabase
+      .from('Users')
+      .insert({Username: username, Email: email, id_user_checker: user.id})
+      .eq('id_user_checker', user.id)
+      
+      if (error) {
+        console.log('Error inserting user:', error)
+      } else {
+        console.log('User inserted successfully:', data)
+}
+      setUsername("");
+      setEmail("");
+  }
+  if (!username === "" || !email === "") {
+  insertData();
+  }
+  
+
+  const fetchFriend_requests = async () => {
+      const {data: {user}} = await supabase.auth.getUser()
+        if(!user) {
+          console.log("No user signed in")
+          return
+      }
+      const {data, error} = await supabase
+      .from('Friend_requests')
+      .select('*')
+      .eq('id_user_checker', user.id)
+      
+      if (error) {
+        console.log('Error fetching friend requests:', error)
+      } else {
+        setFriend_request(data)
+      }
+    }
+    fetchFriend_requests();
 
     const init = async ()=> {
       const {data: {session}} = await supabase.auth.getSession();
@@ -213,23 +247,9 @@ export default function MyApp() {
 
     
   }, []);
-
   return (
     <>
       {zakladki[zakladka]({zmiania_zakladki})}
-      <div>
-        <h1>lalala</h1>
-        {users.map((user) => (
-          <div key={user.id}>
-            <h2>{user.id_users}</h2>
-            <p>{user.Username}</p>
-            <p>{user.Email}</p><br/>
-            <p>{Friend_requests.id_friend_requests}</p>
-            <p>{Friend_requests.To}</p>
-            <p>{Friend_requests.Status}</p>
-          </div>
-        ))}
-      </div>
     </>
   );
 

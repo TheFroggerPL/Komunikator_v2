@@ -65,6 +65,10 @@ main {
     margin-left: auto;
     height: 52rem;
 }
+.glowne_okno {
+    background-color: green;
+    width: 70%;
+}
 
 .kontakty {
     background-color: chocolate;
@@ -95,8 +99,12 @@ main {
     margin-left: 1.2rem;
     margin-right: 1.2rem;
     margin-top: 1.1rem;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    cursor:pointer;
+}
+.znajomi_2-5 > h3 {
+    font-size: 16px;
 }
 .znajomi_3 {
     background-color:cyan ;
